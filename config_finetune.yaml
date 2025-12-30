@@ -1,0 +1,70 @@
+wandb:
+  project: "Llama_3.2_finetuning"
+  watch: "all"
+  log_model: "checkpoint"
+
+model:
+  name: "meta-llama/Llama-3.2-3B"
+  split_model: true
+
+dataset:
+  name: "arxiv"
+  ratio: 0.5
+  split: "ngram_13_0.8"
+  cache_path: "./cache"
+  config_name: null
+  train_start_idx: 0
+  train_end_idx: -1
+  eval_start_idx: 0
+  eval_end_idx: -1
+
+training:
+  epochs: 3
+  save_epochs: 1
+  batch_size: 1
+  block_size: 2048
+  gradient_accumulation_steps: 32
+  learning_rate: 2.0e-5
+  eval_steps: 100
+  log_steps: 10
+  gradient_checkpointing: true
+  distributed: false
+  lr_scheduler_type: "cosine"
+  warmup_steps: 100
+  weight_decay: 0.01
+  fp16: false
+  bf16: true
+  deepspeed:
+    zero_optimization:
+      stage: 2
+      offload_optimizer:
+        device: "cpu"
+        pin_memory: true
+      memory_efficient_linear: true
+      allgather_partitions: true
+      allgather_bucket_size: 500000000
+      overlap_comm: true
+      reduce_scatter: true
+      reduce_bucket_size: 500000000
+      contiguous_gradients: true
+    train_micro_batch_size_per_gpu: 1
+    gradient_clipping: 1.0
+    gradient_accumulation_steps: 32
+    steps_per_print: 10
+    wall_clock_breakdown: false
+    bf16:
+      enabled: true
+    optimizer:
+      type: "AdamW"
+      params:
+        lr: 2.0e-5
+        betas: [0.9, 0.999]
+        eps: 1.0e-8
+        weight_decay: 0.02
+    scheduler:
+      type: "WarmupDecayLR"
+      params:
+        warmup_min_lr: 0
+        warmup_max_lr: 2.0e-5
+        warmup_num_steps: 100
+        total_num_steps: 10000

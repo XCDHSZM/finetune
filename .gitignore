@@ -1,0 +1,29 @@
+**/__pycache__/
+*.pyc
+
+checkpoints/
+cache/
+
+.ipynb_checkpoints/
+.idea/
+.vscode/
+wandb/
+
+config.yaml
+*.pkl
+
+output/*
+fine_tuned_models/*
+defense_outputs/*
+
+# Environment variables and secrets
+.env
+*.key
+*.token
+*_token.txt
+*_key.txt
+
+# Temporary and log files
+*.log
+*.tmp
+.DS_Store
